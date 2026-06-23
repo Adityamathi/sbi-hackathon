@@ -1,0 +1,21 @@
+{
+  "welcome": "Hello! I'm your SBI assistant. How can I help you today?",
+  "choose_intent": "What would you like to do today?\n1. Open a savings account\n2. Explore SBI products\n3. Start digital banking",
+  "ask_age": "Great! Let me find the right account for you. What is your age group?\n1. Under 25\n2. 25 to 45\n3. Above 45",
+  "ask_profession": "What is your profession?\n1. Student\n2. Salaried employee\n3. Self-employed\n4. Farmer\n5. Retired\n6. Other",
+  "ask_area": "Which area do you live in?\n1. Urban\n2. Semi-urban\n3. Rural",
+  "product_recommendation": "Based on your profile, I recommend: {product}. Would you like to know more?",
+  "kyc_info": "To open this account, please keep these documents ready:\n- Aadhaar card\n- PAN card\n- Recent photo\n- Address proof",
+  "kyc_aadhaar": "Please keep your Aadhaar card ready.",
+  "onboarding_ready": "You're all set to begin onboarding! Let me guide you through the steps.",
+  "digital_adoption": "Your account is ready! Would you like to set up YONO app for easy mobile banking?",
+  "next_action_yono": "Download YONO to manage your account digitally.",
+  "completion": "Congratulations! You are now digitally onboarded with SBI. You can manage your account anytime via YONO app.",
+  "fallback": "I'm here to help you with SBI banking. Could you please tell me what you'd like to do?",
+  "product_digital_savings": "We recommend the SBI Digital Savings Account - a zero-balance account with instant YONO activation.",
+  "product_savings_plus": "We recommend the SBI Savings Plus Account - full-featured banking with UPI and investment options.",
+  "product_basic_savings": "We recommend the SBI Basic Savings Bank Deposit Account - a simple account with government scheme access.",
+  "product_branch_assisted": "We recommend the Branch-Assisted Digital Account with personal guidance at your nearest SBI branch.",
+  "error_generic": "Something went wrong. Please try again.",
+  "error_session": "Session expired. Please start again."
+}
