@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ..session import create_session, get_session
+from session import create_session, get_session
 
 router = APIRouter()
 

@@ -1,13 +1,15 @@
-const KYC_ITEMS = ["Aadhaar card", "PAN card", "Recent photo", "Address proof"]
+import { t } from "../i18n"
 
-export default function KYCChecklist({ onReady }) {
+const KYC_KEYS = ["kyc_aadhaar", "kyc_pan", "kyc_photo", "kyc_address"]
+
+export default function KYCChecklist({ onReady, lang }) {
   return (
     <div className="screen">
       <div className="icon-circle">K</div>
-      <h1>KYC Documents Required</h1>
-      <p>Please keep these documents ready for account opening.</p>
+      <h1>{t("kyc_title", lang)}</h1>
+      <p>{t("kyc_desc", lang)}</p>
       <div className="card">
-        {KYC_ITEMS.map((item, i) => (
+        {KYC_KEYS.map((key, i) => (
           <div
             key={i}
             style={{
@@ -15,18 +17,18 @@ export default function KYCChecklist({ onReady }) {
               alignItems: "center",
               gap: "12px",
               padding: "10px 0",
-              borderBottom: i < KYC_ITEMS.length - 1 ? "1px solid #eee" : "none",
+              borderBottom: i < KYC_KEYS.length - 1 ? "1px solid #eee" : "none",
             }}
           >
             <span style={{ width: "24px", height: "24px", borderRadius: "50%", border: "2px solid #003366", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", color: "#003366" }}>
               {i + 1}
             </span>
-            <span style={{ fontSize: "15px" }}>{item}</span>
+            <span style={{ fontSize: "15px" }}>{t(key, lang)}</span>
           </div>
         ))}
       </div>
       <button className="btn btn-primary" onClick={onReady}>
-        I have these ready
+        {t("kyc_btn", lang)}
       </button>
     </div>
   )

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from ..session import get_session, update_session
+from session import get_session, update_session
 
 router = APIRouter()
 

@@ -1,9 +1,11 @@
-export default function ProductRecommendation({ product, onAccept, onChangeProfile }) {
+import { t } from "../i18n"
+
+export default function ProductRecommendation({ product, onAccept, onChangeProfile, lang }) {
   return (
     <div className="screen">
       <div className="icon-circle">P</div>
-      <h1>Recommended Product</h1>
-      <p>Based on your profile, we recommend the following SBI product for you.</p>
+      <h1>{t("product_title", lang)}</h1>
+      <p>{t("product_desc", lang)}</p>
       <div className="card" style={{ borderLeft: "4px solid #003366" }}>
         <h2 style={{ color: "#003366", marginBottom: "8px" }}>
           {product?.name || "SBI Digital Savings Account"}
@@ -13,10 +15,10 @@ export default function ProductRecommendation({ product, onAccept, onChangeProfi
         </p>
       </div>
       <button className="btn btn-primary" onClick={onAccept}>
-        Proceed to KYC
+        {t("product_accept", lang)}
       </button>
       <button className="btn btn-secondary" onClick={onChangeProfile}>
-        Update my profile
+        {t("product_update", lang)}
       </button>
     </div>
   )

@@ -1,18 +1,13 @@
 import { useState } from "react"
+import { t } from "../i18n"
 
-const STEPS = [
-  "Verify Aadhaar",
-  "Submit PAN",
-  "Take selfie",
-  "Set MPIN",
-  "Activate YONO",
-]
+const STEP_KEYS = ["onboard_verify", "onboard_pan", "onboard_selfie", "onboard_mpin", "onboard_yono"]
 
-export default function OnboardingTracker({ onComplete }) {
+export default function OnboardingTracker({ onComplete, lang }) {
   const [currentStep, setCurrentStep] = useState(0)
 
   const handleNext = () => {
-    if (currentStep < STEPS.length - 1) {
+    if (currentStep < STEP_KEYS.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {
       onComplete()
@@ -22,10 +17,10 @@ export default function OnboardingTracker({ onComplete }) {
   return (
     <div className="screen">
       <div className="icon-circle">O</div>
-      <h1>Onboarding Progress</h1>
-      <p>Follow these steps to complete your account setup.</p>
+      <h1>{t("onboard_title", lang)}</h1>
+      <p>{t("onboard_desc", lang)}</p>
       <div className="card">
-        {STEPS.map((step, i) => (
+        {STEP_KEYS.map((key, i) => (
           <div
             key={i}
             style={{
@@ -33,7 +28,7 @@ export default function OnboardingTracker({ onComplete }) {
               alignItems: "center",
               gap: "12px",
               padding: "12px 0",
-              borderBottom: i < STEPS.length - 1 ? "1px solid #eee" : "none",
+              borderBottom: i < STEP_KEYS.length - 1 ? "1px solid #eee" : "none",
               opacity: i <= currentStep ? 1 : 0.4,
             }}
           >
@@ -54,13 +49,13 @@ export default function OnboardingTracker({ onComplete }) {
               {i < currentStep ? "✓" : i + 1}
             </span>
             <span style={{ fontSize: "15px", fontWeight: i === currentStep ? 600 : 400 }}>
-              {step}
+              {t(key, lang)}
             </span>
           </div>
         ))}
       </div>
       <button className="btn btn-primary" onClick={handleNext}>
-        {currentStep < STEPS.length - 1 ? "Next Step" : "Complete"}
+        {currentStep < STEP_KEYS.length - 1 ? t("onboard_next", lang) : t("onboard_complete", lang)}
       </button>
     </div>
   )

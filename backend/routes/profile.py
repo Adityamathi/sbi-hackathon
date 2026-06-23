@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from ..session import get_session, update_session
-from ..recommender.rules import recommend
+from session import get_session, update_session
+from recommender.rules import recommend
 
 router = APIRouter()
 

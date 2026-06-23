@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import { t } from "./i18n"
 import Welcome from "./components/Welcome"
 import LanguageSelector from "./components/LanguageSelector"
 import IntentSelector from "./components/IntentSelector"
@@ -11,7 +12,7 @@ import Completion from "./components/Completion"
 import ChatInterface from "./components/ChatInterface"
 import "./App.css"
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000"
+const API_BASE = ""
 
 const SCREENS = {
   WELCOME: "welcome",
@@ -34,22 +35,21 @@ function App() {
   const [profile, setProfile] = useState({})
   const [product, setProduct] = useState(null)
 
-  useEffect(() => {
-    async function init() {
-      try {
-        const res = await fetch(`${API_BASE}/session/start`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ language }),
-        })
-        const data = await res.json()
-        setSessionId(data.session_id)
-      } catch (e) {
-        console.error("Failed to start session", e)
-      }
+  const startSession = async (lang) => {
+    setLanguage(lang)
+    try {
+      const res = await fetch(`${API_BASE}/api/session/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: lang }),
+      })
+      const data = await res.json()
+      setSessionId(data.session_id)
+      setScreen(SCREENS.INTENT)
+    } catch (e) {
+      console.error("Failed to start session", e)
     }
-    init()
-  }, [])
+  }
 
   const goTo = (nextScreen) => setScreen(nextScreen)
 
@@ -57,21 +57,17 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="sbi-branding">
-          <img src="/sbi-logo.png" alt="SBI" className="sbi-logo" />
-          <span className="sbi-title">SBI Sahaayak</span>
+          <span className="sbi-title">{t("sbi_title", language)}</span>
         </div>
       </header>
       <main className="app-main">
         {screen === SCREENS.WELCOME && (
-          <Welcome onStart={() => goTo(SCREENS.LANGUAGE)} />
+          <Welcome onStart={() => goTo(SCREENS.LANGUAGE)} lang={language} />
         )}
         {screen === SCREENS.LANGUAGE && (
           <LanguageSelector
             selected={language}
-            onSelect={(lang) => {
-              setLanguage(lang)
-              goTo(SCREENS.INTENT)
-            }}
+            onSelect={startSession}
           />
         )}
         {screen === SCREENS.INTENT && (
@@ -80,6 +76,7 @@ function App() {
               setIntent(selectedIntent)
               goTo(SCREENS.PROFILE)
             }}
+            lang={language}
           />
         )}
         {screen === SCREENS.PROFILE && (
@@ -88,6 +85,7 @@ function App() {
               setProfile(p)
               goTo(SCREENS.RECOMMENDATION)
             }}
+            lang={language}
           />
         )}
         {screen === SCREENS.RECOMMENDATION && (
@@ -95,25 +93,26 @@ function App() {
             product={product}
             onAccept={() => goTo(SCREENS.KYC)}
             onChangeProfile={() => goTo(SCREENS.PROFILE)}
+            lang={language}
           />
         )}
         {screen === SCREENS.KYC && (
-          <KYCChecklist onReady={() => goTo(SCREENS.ONBOARDING)} />
+          <KYCChecklist onReady={() => goTo(SCREENS.ONBOARDING)} lang={language} />
         )}
         {screen === SCREENS.ONBOARDING && (
-          <OnboardingTracker onComplete={() => goTo(SCREENS.DIGITAL)} />
+          <OnboardingTracker onComplete={() => goTo(SCREENS.DIGITAL)} lang={language} />
         )}
         {screen === SCREENS.DIGITAL && (
-          <DigitalNextSteps onDone={() => goTo(SCREENS.COMPLETION)} />
+          <DigitalNextSteps onDone={() => goTo(SCREENS.COMPLETION)} lang={language} />
         )}
         {screen === SCREENS.COMPLETION && (
-          <Completion onRestart={() => goTo(SCREENS.WELCOME)} />
+          <Completion onRestart={() => { setSessionId(null); goTo(SCREENS.WELCOME) }} lang={language} />
         )}
         {screen === SCREENS.CHAT && sessionId && (
           <ChatInterface
             sessionId={sessionId}
             language={language}
-            apiBase={API_BASE}
+            apiBase=""
           />
         )}
       </main>

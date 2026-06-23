@@ -1,7 +1,7 @@
 import json
-from ..config import LLM_PROVIDER, GROQ_API_KEY, OPENAI_API_KEY, LLM_MODEL
-from .tools import get_tool_definitions, execute_tool
-from ..session import append_history
+from config import LLM_PROVIDER, GROQ_API_KEY, OPENAI_API_KEY, LLM_MODEL
+from agent.tools import get_tool_definitions, execute_tool
+from session import append_history
 
 system_prompt_template = """You are SBI Sahaayak, a multilingual agentic AI assistant for State Bank of India.
 Your role is to help customers onboard to SBI digital banking and adopt digital services.
@@ -39,73 +39,75 @@ def agent_respond(session: dict, user_message: str) -> str:
 
     tools = get_tool_definitions()
 
-    if LLM_PROVIDER == "groq" and GROQ_API_KEY:
-        from groq import Groq
-        client = Groq(api_key=GROQ_API_KEY)
-        response = client.chat.completions.create(
-            model=LLM_MODEL,
-            messages=messages,
-            tools=tools,
-            tool_choice="auto",
-        )
-        msg = response.choices[0].message
-
-        if msg.tool_calls:
-            for tool_call in msg.tool_calls:
-                tool_name = tool_call.function.name
-                tool_args = json.loads(tool_call.function.arguments)
-                result = execute_tool(tool_name, tool_args, session)
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": result,
-                })
-                append_history(session["session_id"], "assistant", f"[Tool: {tool_name}] {result}")
-
-            final_response = client.chat.completions.create(
+    try:
+        if LLM_PROVIDER == "groq" and GROQ_API_KEY:
+            from groq import Groq
+            client = Groq(api_key=GROQ_API_KEY)
+            response = client.chat.completions.create(
                 model=LLM_MODEL,
                 messages=messages,
+                tools=tools,
+                tool_choice="auto",
             )
-            return final_response.choices[0].message.content
-        return msg.content
+            msg = response.choices[0].message
 
-    elif LLM_PROVIDER == "openai" and OPENAI_API_KEY:
-        from openai import OpenAI
-        client = OpenAI(api_key=OPENAI_API_KEY)
-        response = client.chat.completions.create(
-            model=LLM_MODEL,
-            messages=messages,
-            tools=tools,
-            tool_choice="auto",
-        )
-        msg = response.choices[0].message
+            if msg.tool_calls:
+                for tool_call in msg.tool_calls:
+                    tool_name = tool_call.function.name
+                    tool_args = json.loads(tool_call.function.arguments)
+                    result = execute_tool(tool_name, tool_args, session)
+                    messages.append({
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": result,
+                    })
+                    append_history(session["session_id"], "assistant", f"[Tool: {tool_name}] {result}")
 
-        if msg.tool_calls:
-            for tool_call in msg.tool_calls:
-                tool_name = tool_call.function.name
-                tool_args = json.loads(tool_call.function.arguments)
-                result = execute_tool(tool_name, tool_args, session)
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": result,
-                })
-                append_history(session["session_id"], "assistant", f"[Tool: {tool_name}] {result}")
+                final_response = client.chat.completions.create(
+                    model=LLM_MODEL,
+                    messages=messages,
+                )
+                return final_response.choices[0].message.content
+            return msg.content
 
-            final_response = client.chat.completions.create(
+        elif LLM_PROVIDER == "openai" and OPENAI_API_KEY:
+            from openai import OpenAI
+            client = OpenAI(api_key=OPENAI_API_KEY)
+            response = client.chat.completions.create(
                 model=LLM_MODEL,
                 messages=messages,
+                tools=tools,
+                tool_choice="auto",
             )
-            return final_response.choices[0].message.content
-        return msg.content
+            msg = response.choices[0].message
 
-    else:
-        return _fallback_respond(session, user_message)
+            if msg.tool_calls:
+                for tool_call in msg.tool_calls:
+                    tool_name = tool_call.function.name
+                    tool_args = json.loads(tool_call.function.arguments)
+                    result = execute_tool(tool_name, tool_args, session)
+                    messages.append({
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": result,
+                    })
+                    append_history(session["session_id"], "assistant", f"[Tool: {tool_name}] {result}")
+
+                final_response = client.chat.completions.create(
+                    model=LLM_MODEL,
+                    messages=messages,
+                )
+                return final_response.choices[0].message.content
+            return msg.content
+    except Exception as e:
+        append_history(session["session_id"], "assistant", f"[Error: {str(e)}]")
+
+    return _fallback_respond(session, user_message)
 
 
 def _fallback_respond(session: dict, user_message: str) -> str:
-    from ..recommender.rules import recommend
-    from ..i18n.translations import t
+    from recommender.rules import recommend
+    from i18n.translations import t
 
     language = session.get("language", "en")
     step = session.get("step", "welcome")

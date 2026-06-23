@@ -1,46 +1,35 @@
 import { useState } from "react"
+import { t } from "../i18n"
 
 const AGE_BANDS = [
-  { value: "under_25", label: "Under 25" },
-  { value: "25_45", label: "25 to 45" },
-  { value: "45_plus", label: "Above 45" },
+  { value: "under_25", key: "profile_age_under25" },
+  { value: "25_45", key: "profile_age_25_45" },
+  { value: "45_plus", key: "profile_age_45plus" },
 ]
 
 const PROFESSIONS = [
-  { value: "student", label: "Student" },
-  { value: "salaried", label: "Salaried employee" },
-  { value: "self_employed", label: "Self-employed" },
-  { value: "farmer", label: "Farmer" },
-  { value: "retired", label: "Retired" },
-  { value: "other", label: "Other" },
+  { value: "student", key: "profile_prof_student" },
+  { value: "salaried", key: "profile_prof_salaried" },
+  { value: "self_employed", key: "profile_prof_self" },
+  { value: "farmer", key: "profile_prof_farmer" },
+  { value: "retired", key: "profile_prof_retired" },
+  { value: "other", key: "profile_prof_other" },
 ]
 
 const AREAS = [
-  { value: "urban", label: "Urban" },
-  { value: "semi_urban", label: "Semi-urban" },
-  { value: "rural", label: "Rural" },
+  { value: "urban", key: "profile_area_urban" },
+  { value: "semi_urban", key: "profile_area_semi" },
+  { value: "rural", key: "profile_area_rural" },
 ]
 
-export default function ProfileQA({ onSubmit }) {
+export default function ProfileQA({ onSubmit, lang }) {
   const [step, setStep] = useState(0)
   const [profile, setProfile] = useState({})
 
   const questions = [
-    {
-      title: "What is your age group?",
-      key: "age_band",
-      options: AGE_BANDS,
-    },
-    {
-      title: "What is your profession?",
-      key: "profession",
-      options: PROFESSIONS,
-    },
-    {
-      title: "Which area do you live in?",
-      key: "area",
-      options: AREAS,
-    },
+    { titleKey: "profile_age", key: "age_band", options: AGE_BANDS },
+    { titleKey: "profile_profession", key: "profession", options: PROFESSIONS },
+    { titleKey: "profile_area", key: "area", options: AREAS },
   ]
 
   const current = questions[step]
@@ -65,9 +54,9 @@ export default function ProfileQA({ onSubmit }) {
           />
         ))}
       </div>
-      <h2>{current.title}</h2>
+      <h2>{t(current.titleKey, lang)}</h2>
       <p style={{ fontSize: "14px", color: "#888", marginBottom: "8px" }}>
-        Question {step + 1} of {questions.length}
+        {t("profile_q_of", lang)} {step + 1} {t("profile_of", lang)} {questions.length}
       </p>
       {current.options.map((opt) => (
         <button
@@ -75,7 +64,7 @@ export default function ProfileQA({ onSubmit }) {
           className="btn btn-option"
           onClick={() => handleSelect(opt.value)}
         >
-          {opt.label}
+          {t(opt.key, lang)}
         </button>
       ))}
     </div>

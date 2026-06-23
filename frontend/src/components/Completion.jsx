@@ -1,4 +1,6 @@
-export default function Completion({ onRestart }) {
+import { t } from "../i18n"
+
+export default function Completion({ onRestart, lang }) {
   return (
     <div className="screen" style={{ textAlign: "center", alignItems: "center" }}>
       <div
@@ -17,21 +19,21 @@ export default function Completion({ onRestart }) {
       >
         ✓
       </div>
-      <h1>Welcome to SBI!</h1>
+      <h1>{t("complete_title", lang)}</h1>
       <p style={{ fontSize: "16px", lineHeight: "1.6" }}>
-        You are now digitally onboarded with State Bank of India. You can manage your account anytime via the YONO app.
+        {t("complete_desc", lang)}
       </p>
       <div className="card" style={{ width: "100%", textAlign: "left" }}>
-        <p style={{ fontWeight: 600, marginBottom: "8px" }}>What you can do next:</p>
+        <p style={{ fontWeight: 600, marginBottom: "8px" }}>{t("complete_next_title", lang)}</p>
         <ul style={{ paddingLeft: "20px", color: "#555", fontSize: "14px", lineHeight: "1.8" }}>
-          <li>Download YONO from Play Store / App Store</li>
-          <li>Log in with your registered mobile number</li>
-          <li>Check balance, transfer funds, pay bills</li>
-          <li>Visit your nearest branch for assistance</li>
+          <li>{t("complete_next_1", lang)}</li>
+          <li>{t("complete_next_2", lang)}</li>
+          <li>{t("complete_next_3", lang)}</li>
+          <li>{t("complete_next_4", lang)}</li>
         </ul>
       </div>
       <button className="btn btn-secondary" onClick={onRestart}>
-        Start over
+        {t("complete_restart", lang)}
       </button>
     </div>
   )

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { t } from "../i18n"
 
 export default function ChatInterface({ sessionId, language, apiBase }) {
   const [messages, setMessages] = useState([
@@ -15,7 +16,7 @@ export default function ChatInterface({ sessionId, language, apiBase }) {
     setLoading(true)
 
     try {
-      const res = await fetch(`${apiBase}/agent/respond`, {
+      const res = await fetch(`${apiBase}/api/agent/respond`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: sessionId, message: userMsg }),
@@ -37,7 +38,7 @@ export default function ChatInterface({ sessionId, language, apiBase }) {
 
   return (
     <div className="screen" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-      <h2 style={{ marginBottom: "16px" }}>Chat with SBI Sahaayak</h2>
+      <h2 style={{ marginBottom: "16px" }}>{t("chat_title", language)}</h2>
       <div
         className="card"
         style={{
@@ -70,7 +71,7 @@ export default function ChatInterface({ sessionId, language, apiBase }) {
         ))}
         {loading && (
           <div style={{ alignSelf: "flex-start", color: "#888", fontSize: "14px" }}>
-            Typing...
+            {t("chat_typing", language)}
           </div>
         )}
       </div>
@@ -79,7 +80,7 @@ export default function ChatInterface({ sessionId, language, apiBase }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type your message..."
+          placeholder={t("chat_placeholder", language)}
           rows={2}
           style={{
             flex: 1,
@@ -97,7 +98,7 @@ export default function ChatInterface({ sessionId, language, apiBase }) {
           disabled={loading || !input.trim()}
           style={{ width: "auto", padding: "10px 20px", alignSelf: "flex-end" }}
         >
-          Send
+          {t("chat_send", language)}
         </button>
       </div>
     </div>
